@@ -1,8 +1,5 @@
 package io.github.robwin;
 
-
-import java.net.URI;
-
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.core.registry.EntryAddedEvent;
 import io.github.resilience4j.core.registry.EntryRemovedEvent;
@@ -17,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import java.net.URI;
+
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.permanentRedirect;
@@ -24,7 +23,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.pe
 @SpringBootApplication
 public class Application {
 
-    private static Logger LOG = LoggerFactory.getLogger(Application.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -57,25 +56,24 @@ public class Application {
         };
     }
 
-@Bean
-public RegistryEventConsumer<Retry> myRetryRegistryEventConsumer() {
+    @Bean
+    public RegistryEventConsumer<Retry> myRetryRegistryEventConsumer() {
 
-    return new RegistryEventConsumer<Retry>() {
-        @Override
-        public void onEntryAddedEvent(EntryAddedEvent<Retry> entryAddedEvent) {
-            entryAddedEvent.getAddedEntry().getEventPublisher().onEvent(event -> LOG.info(event.toString()));
-        }
+        return new RegistryEventConsumer<Retry>() {
+            @Override
+            public void onEntryAddedEvent(EntryAddedEvent<Retry> entryAddedEvent) {
+                entryAddedEvent.getAddedEntry().getEventPublisher().onEvent(event -> LOG.info(event.toString()));
+            }
 
-        @Override
-        public void onEntryRemovedEvent(EntryRemovedEvent<Retry> entryRemoveEvent) {
+            @Override
+            public void onEntryRemovedEvent(EntryRemovedEvent<Retry> entryRemoveEvent) {
 
-        }
+            }
 
-        @Override
-        public void onEntryReplacedEvent(EntryReplacedEvent<Retry> entryReplacedEvent) {
+            @Override
+            public void onEntryReplacedEvent(EntryReplacedEvent<Retry> entryReplacedEvent) {
 
-        }
-    };
-}
-
+            }
+        };
+    }
 }
